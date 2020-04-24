@@ -1,23 +1,40 @@
 //javac main.java
 //java main
-import java.util.Arrays;
+import java.util.*;
 
 public class main {
     public static void main(String args[]){
-        double[] inputs = {1, 2, 3, 2.5};
-        
-        double[] weights1 = {0.2, 0.8, -0.5, 1.0};
-        double[] weights2 = {0.5, -0.91, 0.26, -0.5};
-        double[] weights3 = {-0.26, -0.27, 0.17, 0.87};
-        
-        double bias1 = 2;
-        double bias2 = 3;
-        double bias3 = 0.5;
+        List<Double> inputs = new ArrayList<Double>(Arrays.asList(1.0, 2.0, 3.0, 2.5));
 
-        double[] output = {inputs[0]*weights1[0] + inputs[1]*weights1[1] + inputs[2]*weights1[2] + inputs[3]*weights1[3] + bias1,
-                        inputs[0]*weights2[0] + inputs[1]*weights2[1] + inputs[2]*weights2[2] + inputs[3]*weights2[3] + bias2,
-                        inputs[0]*weights3[0] + inputs[1]*weights3[1] + inputs[2]*weights3[2] + inputs[3]*weights3[3] + bias3};
+        List<ArrayList<Double>> weights = new ArrayList<>(Arrays.asList(
+            new ArrayList<Double>(Arrays.asList(0.2, 0.8, -0.5, 1.0)), 
+            new ArrayList<Double>(Arrays.asList(0.5, -0.91, 0.26, -0.5)), 
+            new ArrayList<Double>(Arrays.asList(-0.26, -0.27, 0.17, 0.87))));
 
-        System.out.println(Arrays.toString(output));
+        List<Double> biases = new ArrayList<Double>(Arrays.asList(2.0, 3.0, 0.5));
+
+        List<Double> output = add(dot(weights, inputs), biases);
+
+        System.out.println(output);
+    }
+
+    private static List<Double> dot(List<ArrayList<Double>> weights, List<Double> inputs){
+        List<Double> result = new ArrayList<>();
+        for(int i= 0; i<weights.size();i++){
+            double node = 0;
+            for(int j=0;j<weights.get(i).size();j++){
+                node += weights.get(i).get(j)*inputs.get(j);
+            }
+            result.add(node);
+        }
+        return result;
+    }
+
+    private static List<Double> add(List<Double> dotProduct, List<Double> biases){
+        List<Double> result = new ArrayList<>();
+        for(int i= 0; i<dotProduct.size();i++){
+            result.add(dotProduct.get(i)+biases.get(i));
+        }
+        return result;
     }
 }
