@@ -1,4 +1,4 @@
-//javac main.java
+//javac *.java
 //java main
 import java.util.*;
 
@@ -27,39 +27,31 @@ public class main {
         }
         
         public void forward(List<ArrayList<Double>> inputs){
-            this.output = add(dot(inputs, this.weights), this.biases);
+            this.output = math.add(math.dot(inputs, this.weights), this.biases);
         }
         
         public List<ArrayList<Double>> getOutput(){
             return output;
         }
-        
-        private static List<ArrayList<Double>> dot(List<ArrayList<Double>> a, List<ArrayList<Double>> b){
-            List<ArrayList<Double>> result = new ArrayList<>();
-            for(int i= 0; i<a.size();i++){
-                ArrayList<Double> row = new ArrayList<>();
-                for(int j=0;j<b.get(0).size();j++){
-                    Double val = 0.0;
-                    for(int k=0;k<a.get(0).size();k++){
-                        val += a.get(i).get(k) * b.get(k).get(j);
-                    }
-                    row.add(val);
-                }
-                result.add(row);
-            }
-            return result;
-        }
+    }
     
-        private static List<ArrayList<Double>> add(List<ArrayList<Double>> a, List<Double> b){
+    private static class Activation_ReLU{
+        private List<ArrayList<Double>> output;
+        
+        public void forward(List<ArrayList<Double>> inputs){
             List<ArrayList<Double>> result = new ArrayList<>();
-            for(int i= 0; i<a.size();i++){
+            for(int i= 0; i<inputs.size();i++){
                 ArrayList<Double> row = new ArrayList<>();
-                for(int j=0;j<a.get(0).size();j++){
-                    row.add(a.get(i).get(j) + b.get(j));
+                for(int j=0;j<inputs.get(0).size();j++){
+                    row.add(inputs.get(i).get(j)<0?0:inputs.get(i).get(j));
                 }
                 result.add(row);
             }
-            return result;
+            this.output = result;
+        }
+        
+        public List<ArrayList<Double>> getOutput(){
+            return output;
         }
     }
     
@@ -69,13 +61,19 @@ public class main {
             new ArrayList<Double>(Arrays.asList(1.0, 2.0, 3.0, 2.5)), 
             new ArrayList<Double>(Arrays.asList(2.0, 5.0, -1.0, 2.0)), 
             new ArrayList<Double>(Arrays.asList(-1.5, 2.7, 3.3, -0.8))));
+            
+        nnfs NNFS = new nnfs();
+        NNFS.spiral_data(100,3);
         
-        Layer_Dense layer1 = new Layer_Dense(4,5);
-        Layer_Dense layer2 = new Layer_Dense(5,2);
+        X = NNFS.getSpiral_data_X();
         
-        layer1.forward(X);
-        layer2.forward(layer1.getOutput());
+        Layer_Dense layer1 = new Layer_Dense(2,5);
+        Activation_ReLU activation1 = new Activation_ReLU();
 
-        System.out.println(layer2.getOutput());
+        layer1.forward(X);
+        System.out.println(layer1.getOutput());
+        activation1.forward(layer1.getOutput());
+
+        System.out.println(activation1.getOutput());
     }
 }
