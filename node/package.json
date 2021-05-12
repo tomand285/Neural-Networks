@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "mathjs": "^6.6.4"
+    "mathjs": "^7.5.1"
   },
   "devDependencies": {},
   "scripts": {
